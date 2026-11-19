@@ -49,3 +49,52 @@ jobs:
           files: "Visual-Vibrance-${{ github.event.release.tag_name }}.zip"
           loaders: iris
           game-versions: ">=1.20"
+
+  publish-voxy:
+    name: Publish Voxy preview to GitHub Releases
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish:voxy]')
+    needs: validate-shaders
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package shaderpack and checksum
+        env:
+          TAG: v0.1.0-voxy.1
+        run: |
+          set -euo pipefail
+          ZIP="Visual-Vibrance-$TAG.zip"
+          zip -q -r "$ZIP" LICENSE shaders/
+          sha256sum "$ZIP" > "$ZIP.sha256"
+          unzip -t "$ZIP" >/dev/null
+          echo "ZIP=$ZIP" >> "$GITHUB_ENV"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+      - name: Publish GitHub prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::error::Release $TAG already exists; refusing to overwrite it."
+            exit 1
+          fi
+          cat > release-notes.md <<'NOTES'
+          ## Visual Vibrance — Voxy integration preview
+
+          This prerelease ports the Glimmer Voxy shader integration to Visual Vibrance.
+
+          - Opaque and translucent Voxy passes for Overworld, Nether, and End.
+          - Distance, depth, projection, AO and fog integration.
+          - Existing Visual Vibrance fog and visual settings retained.
+          - Offline GLSL validation passed for all six Voxy shader variants.
+
+          **Preview status:** No Iris/Voxy in-game visual parity test has been completed.
+          Requires a compatible Iris + Voxy setup; please report graphics issues before treating this as a stable release.
+          NOTES
+          gh release create "$TAG" "$ZIP" "$ZIP.sha256" \
+            --target "$GITHUB_SHA" \
+            --title "Visual Vibrance $TAG — Voxy preview" \
+            --notes-file release-notes.md \
+            --prerelease \
+            --latest=false
