@@ -85,6 +85,10 @@ def compile_glsl(conf):
     check(compiler is not None, "glslangValidator is required (no skipped compilation)")
     # Voxy injects uniforms/samplers/SSBOs before the patch; mirror that here.
     uniforms = expand("lib/common/uniforms.glsl")
+    # These computed globals are declared by common.glsl in Voxy patches.
+    for variable in ("resolution", "EB", "EBS"):
+        uniforms, removed = re.subn(r"^vec2 " + variable + r" = .*?;\s*$", "", uniforms, flags=re.MULTILINE)
+        check(removed == 1, f"Offline Iris stub missing global: {variable}")
     stub = """
 uniform mat4 vxProj, vxProjInv, vxProjPrev;
 uniform mat4 vxModelView, vxModelViewInv, vxModelViewPrev;
