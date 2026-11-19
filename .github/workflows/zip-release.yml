@@ -3,7 +3,9 @@ name: Build and Distribute Release
 on:
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+      - 'feat/**'
   release:
     types: [published]
 
