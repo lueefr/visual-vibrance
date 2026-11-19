@@ -1,6 +1,7 @@
 name: Build and Distribute Release
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
