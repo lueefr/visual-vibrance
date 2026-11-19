@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1] / "shaders"
 WORLDS = ("world0", "world-1", "world1")
 STAGES = ("voxy_opaque.glsl", "voxy_translucent.glsl")
-INC = re.compile(r'^[ \t]*#include[ \t]+"(/[^"]+)"[ \t]*
+INC = re.compile(r'^[ \t]*#include[ \t]+"(/[^"]+)"[ \t]*$', re.MULTILINE)
 
 
 def check(ok, message):
