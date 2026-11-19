@@ -21,7 +21,7 @@
 #include "/lib/atmosphere/clouds.glsl"
 
 vec3 atmosphericFog(vec3 color, vec3 viewPos) {
-  #ifdef DISTANT_HORIZONS
+  #if defined DISTANT_HORIZONS || defined VOXY
   float end = dhRenderDistance;
   #else
   float end = far;

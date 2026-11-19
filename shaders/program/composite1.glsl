@@ -281,7 +281,7 @@ void main() {
 
     bool reflectionHit = doReflections;
 
-    #ifdef DISTANT_HORIZONS
+    #if defined DISTANT_HORIZONS || defined VOXY
     if (dhMask) {
       reflectionHit =
         reflectionHit &&
@@ -329,7 +329,7 @@ void main() {
 
     if (reflectionHit) {
       reflectedColor = texture(colortex0, reflectedPos.xy).rgb;
-      #ifdef DISTANT_HORIZONS
+      #if defined DISTANT_HORIZONS || defined VOXY
       vec3 viewReflectedPos = screenSpaceToViewSpace(
         reflectedPos,
         dhMask
