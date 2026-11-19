@@ -42,7 +42,7 @@ layout(location = 0) out vec4 color;
 void main() {
   color = texture(colortex0, texcoord);
 
-  #if defined DISTANT_HORIZONS && defined DH_AO
+  #if (defined DISTANT_HORIZONS || defined VOXY) && defined DH_AO
   float depth = texture(depthtex0, texcoord).r;
   vec3 viewPos = vec3(0.0);
   if (depth != 1.0) {

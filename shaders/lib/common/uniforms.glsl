@@ -147,7 +147,7 @@ uniform sampler2D causticsTex;
 
 uniform float endFlashIntensity = 1.0;
 
-#ifdef DISTANT_HORIZONS
+#if defined DISTANT_HORIZONS || defined VOXY
 uniform int dhRenderDistance;
 uniform float dhFarPlane;
 

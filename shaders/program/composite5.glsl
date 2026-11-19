@@ -35,7 +35,7 @@ void main(){
     
     // isn't this some fun syntax
     float sunVisibility = float(texture(depthtex1, lightScreenPos).r == 1.0
-    #ifdef DISTANT_HORIZONS
+    #if defined DISTANT_HORIZONS || defined VOXY
      && texture(dhDepthTex1, lightScreenPos).r == 1.0
     #endif
     );

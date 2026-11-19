@@ -42,7 +42,7 @@ void main() {
   occlusion = texture(colortex4, texcoord).rgb;
   bool visible = texture(depthtex0, texcoord).r == 1.0;
 
-  #ifdef DISTANT_HORIZONS
+  #if defined DISTANT_HORIZONS || defined VOXY
   visible = visible && texture(dhDepthTex0, texcoord).r == 1.0;
   #endif
 

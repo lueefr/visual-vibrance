@@ -23,7 +23,21 @@
 #include "/lib/common/debug.glsl"
 
 #include "/lib/common/syntax.glsl"
+#ifdef VOXY
+#define dhRenderDistance vxRenderDistance
+#define dhProjection vxProj
+#define dhProjectionInverse vxProjInv
+#define dhDepthTex0 vxDepthTexTrans
+#define dhDepthTex1 vxDepthTexOpaque
+#endif
+
+#ifndef GBUFFERS_VOXY
 #include "/lib/common/uniforms.glsl"
+#else
+vec2 resolution = vec2(viewWidth, viewHeight);
+vec2 EB = vec2(eyeBrightness) / 240.0;
+vec2 EBS = vec2(eyeBrightnessSmooth) / 240.0;
+#endif
 #include "/lib/common/util.glsl"
 
 #include "/lib/common/materialIDs.glsl"
@@ -56,6 +70,7 @@ vec3 worldLightDir = mat3(gbufferModelViewInverse) * lightDir;
 bool isDay = sunDir == lightDir;
 #define isNight !isDay
 
+#ifndef GBUFFERS_VOXY
 layout(std430, binding = 0) buffer environmentData {
     vec3 sunlightColor;
     vec3 skylightColor;
@@ -66,6 +81,7 @@ layout(std430, binding = 0) buffer environmentData {
 layout(std430, binding = 1) buffer smoothedData {
     float sunVisibilitySmooth;
 };
+#endif
 
 float skyMultiplier = clamp01(constantMood > 0.9 ? 0.0 : 1.0);
 
@@ -95,7 +111,7 @@ const vec4 colortex4ClearColor = vec4(1.0, 1.0, 1.0, 1.0);
     const int colortex4Format = RGB8;
 */
 
-#ifdef DISTANT_HORIZONS
+#if defined DISTANT_HORIZONS || defined VOXY
 /*
     const int colortex6Format = R16;
 */

@@ -36,7 +36,9 @@ int convertDHMaterialIDs(int id) {
 
   return 0;
 }
+#endif
 
+#if defined DISTANT_HORIZONS || defined VOXY
 void dhOverride(inout float depth, inout vec3 viewPos, bool opaque) {
   dhMask = false;
   if (depth != 1.0) return;
