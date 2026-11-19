@@ -126,7 +126,7 @@ void main() {
                                         capture_output=True, text=True)
                 if result.returncode != 0:
                     lines = source.splitlines()
-                    positions = [int(n) for n in re.findall(r"ERROR: \\d+:(\\d+):", result.stdout)]
+                    positions = [int(n) for n in re.findall(r"ERROR: \d+:(\d+):", result.stdout)]
                     for n in positions:
                         print(f"Shader source around line {n}:", file=sys.stderr)
                         for k in range(max(1, n - 6), min(len(lines), n + 7) + 1):
