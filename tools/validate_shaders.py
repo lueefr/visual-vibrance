@@ -124,6 +124,13 @@ void main() {
                 filename.write_text(source)
                 result = subprocess.run([compiler, "-S", "frag", str(filename)],
                                         capture_output=True, text=True)
+                if result.returncode != 0:
+                    lines = source.splitlines()
+                    positions = [int(n) for n in re.findall(r"ERROR: \\d+:(\\d+):", result.stdout)]
+                    for n in positions:
+                        print(f"Shader source around line {n}:", file=sys.stderr)
+                        for k in range(max(1, n - 6), min(len(lines), n + 7) + 1):
+                            print(f"{k}: {lines[k - 1]}", file=sys.stderr)
                 check(result.returncode == 0,
                       f"GLSL compile error ({world}/{stage}):\n{result.stdout}\n{result.stderr}")
                 print(f"PASS: GLSL {world}/{stage}")
